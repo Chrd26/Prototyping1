@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="BoxShape" id=1]
+
+[node name="VehicleBody" type="VehicleBody"]
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 3.062, 0, 0, 0, 1.834, 0, 0, 0, 5.272, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.98777, 0.155917, 0, -0.155917, 0.98777, 0, 0.973, 5.325 )
+current = true

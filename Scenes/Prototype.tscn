@@ -1,0 +1,143 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Scenes/Vehicle2.tscn" type="PackedScene" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+
+[sub_resource type="ProceduralSky" id=4]
+sky_top_color = Color( 0.52549, 0.0980392, 0.611765, 1 )
+sky_horizon_color = Color( 0.054902, 0, 1, 1 )
+sky_curve = 0.000807677
+sky_energy = 5.0
+ground_bottom_color = Color( 0.721569, 0.0627451, 0.933333, 1 )
+ground_horizon_color = Color( 0, 0, 0, 1 )
+ground_curve = 0.259921
+ground_energy = 25.0
+sun_color = Color( 0, 0.811765, 1, 1 )
+sun_latitude = -180.0
+sun_energy = 9.34
+
+[sub_resource type="Environment" id=5]
+background_mode = 2
+background_sky = SubResource( 4 )
+ambient_light_color = Color( 0.156863, 0.254902, 0.498039, 1 )
+ambient_light_energy = 0.57
+
+[sub_resource type="Animation" id=6]
+resource_name = "Anim1"
+length = 60.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:environment:background_sky:sun_latitude")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 60 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ -180.0, 180.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:environment:background_sky:sky_energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 3, 30, 45, 60 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 3.0, 0.5, 3.0, 5.0, 3.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:environment:background_sky:ground_energy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 3, 30, 45, 60 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 10.0, 2.0, 10.0, 25.0, 10.0 ]
+}
+
+[sub_resource type="Animation" id=7]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:environment:background_sky:sun_latitude")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ -180.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:environment:background_sky:sky_energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 5.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:environment:background_sky:ground_energy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 25.0 ]
+}
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_world_triplanar = true
+albedo_color = Color( 1, 0, 0, 1 )
+albedo_texture = ExtResource( 2 )
+uv1_triplanar = true
+
+[sub_resource type="CubeMesh" id=1]
+material = SubResource( 2 )
+
+[sub_resource type="ConvexPolygonShape" id=3]
+points = PoolVector3Array( -1, -1, -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, -1, 1, 1, 1, -1, -1, -1, -1, 1, -1, 1, -1 )
+
+[node name="Spatial" type="Spatial"]
+
+[node name="Vehicle" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.17926, 0 )
+
+[node name="Design" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Design"]
+environment = SubResource( 5 )
+
+[node name="Sun" type="AnimationPlayer" parent="Design/WorldEnvironment"]
+autoplay = "Anim1"
+anims/Anim1 = SubResource( 6 )
+anims/RESET = SubResource( 7 )
+
+[node name="RigidBody" type="RigidBody" parent="Design"]
+transform = Transform( 2.434, 0, 0, 0, 1, 0, 0, 0, 2.582, 0, 0, 0 )
+mode = 1
+
+[node name="MeshInstance" type="MeshInstance" parent="Design/RigidBody"]
+transform = Transform( 100, 0, 0, 0, 1, 0, 0, 0, 100, 0, 0, 0 )
+mesh = SubResource( 1 )
+skeleton = NodePath("../../..")
+
+[node name="CollisionShape" type="CollisionShape" parent="Design/RigidBody"]
+transform = Transform( 100, 0, 0, 0, 1, 0, 0, 0, 100, 0.00603485, -0.119175, -0.0460052 )
+shape = SubResource( 3 )
